@@ -4,9 +4,9 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Gerador de assinatura de E-mail</title>
-<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ccircle cx='32' cy='32' r='32' fill='%23555'/%3E%3Cg transform='translate(32 32) rotate(45)' fill='%23fff'%3E%3Crect x='-4' y='-8' width='8' height='32' rx='3.5'/%3E%3Ccircle cy='-13' r='12'/%3E%3Ccircle cy='25' r='6.5'/%3E%3Crect x='-5' y='-29' width='10' height='14' fill='%23555'/%3E%3Ccircle cy='25' r='2.4' fill='%23555'/%3E%3C/g%3E%3C/svg%3E">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ccircle cx='32' cy='32' r='32' fill='%231e5fb4'/%3E%3Cg transform='translate(32 32) rotate(45)' fill='%23fff'%3E%3Crect x='-4' y='-8' width='8' height='32' rx='3.5'/%3E%3Ccircle cy='-13' r='12'/%3E%3Ccircle cy='25' r='6.5'/%3E%3Crect x='-5' y='-29' width='10' height='14' fill='%231e5fb4'/%3E%3Ccircle cy='25' r='2.4' fill='%231e5fb4'/%3E%3C/g%3E%3C/svg%3E">
 <style>
-:root{--acc:#555;--acc-dark:#333;--gray:#4a4a4a;--ink:#1f2124;--muted:#6b7075;--line:#e3e6e9;--page:#eef0f2;--ease:cubic-bezier(.22,.8,.24,1)}
+:root{--acc:#1e5fb4;--acc-dark:#154a91;--gray:#2c4a6e;--ink:#12263f;--muted:#5f7287;--line:#d6e2f0;--page:#e8f0f9;--ease:cubic-bezier(.22,.8,.24,1)}
 *{box-sizing:border-box}
 html{scroll-behavior:smooth}
 body{margin:0;background:var(--page);color:var(--ink);font-family:Arial,sans-serif;min-height:100vh;position:relative;overflow-x:hidden}
@@ -20,22 +20,22 @@ body{margin:0;background:var(--page);color:var(--ink);font-family:Arial,sans-ser
 .hero p{margin:0;max-width:62ch;color:var(--muted);font-size:17px;line-height:1.5}
 @keyframes grow{from{transform:scaleY(0)}to{transform:scaleY(1)}}
 
-.panel{background:#fff;border:1px solid var(--line);border-radius:14px;padding:26px;box-shadow:0 1px 2px #1f21240a,0 12px 32px -12px #1f212426;margin-bottom:22px;transition:box-shadow .35s var(--ease),transform .35s var(--ease)}
-.panel:hover{box-shadow:0 1px 2px #1f21240a,0 18px 40px -14px #1f212433}
+.panel{background:#fff;border:1px solid var(--line);border-radius:14px;padding:26px;box-shadow:0 1px 2px #12263f0a,0 12px 32px -12px #12263f26;margin-bottom:22px;transition:box-shadow .35s var(--ease),transform .35s var(--ease)}
+.panel:hover{box-shadow:0 1px 2px #12263f0a,0 18px 40px -14px #12263f33}
 
 .fields{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px}
 label{display:block;font-size:14px;font-weight:700;margin-bottom:6px;color:var(--gray);transition:color .2s}
 .fields>div:focus-within label{color:var(--acc)}
 
-input{width:100%;padding:12px 14px;border:1.5px solid #d3d7db;border-radius:8px;background:#fafbfb;color:var(--ink);font:16px Arial,sans-serif;transition:border-color .2s,box-shadow .25s,background .2s}
-input::placeholder{color:#a2a7ac}
-input:hover{border-color:#b8bdc2}
-input:focus{outline:none;background:#fff;border-color:var(--acc);box-shadow:0 0 0 4px #55555526}
+input{width:100%;padding:12px 14px;border:1.5px solid #c3d3e6;border-radius:8px;background:#f5f9fe;color:var(--ink);font:16px Arial,sans-serif;transition:border-color .2s,box-shadow .25s,background .2s}
+input::placeholder{color:#8fa4bb}
+input:hover{border-color:#9bb4d2}
+input:focus{outline:none;background:#fff;border-color:var(--acc);box-shadow:0 0 0 4px #1e5fb426}
 
 /* campos com parte fixa */
-.group{display:flex;align-items:center;width:100%;padding:12px 14px;border:1.5px solid #d3d7db;border-radius:8px;background:#fafbfb;cursor:text;font:16px Arial,sans-serif;transition:border-color .2s,box-shadow .25s,background .2s;position:relative;overflow:hidden}
-.group:hover{border-color:#b8bdc2}
-.group:focus-within{background:#fff;border-color:var(--acc);box-shadow:0 0 0 4px #55555526}
+.group{display:flex;align-items:center;width:100%;padding:12px 14px;border:1.5px solid #c3d3e6;border-radius:8px;background:#f5f9fe;cursor:text;font:16px Arial,sans-serif;transition:border-color .2s,box-shadow .25s,background .2s;position:relative;overflow:hidden}
+.group:hover{border-color:#9bb4d2}
+.group:focus-within{background:#fff;border-color:var(--acc);box-shadow:0 0 0 4px #1e5fb426}
 .group input{width:auto;min-width:0;padding:0;border:0;border-radius:0;background:transparent;box-shadow:none}
 .group input:focus,.group input:hover{background:transparent;box-shadow:none;border:0}
 .group .suffix,.group .pref{flex:none;color:var(--acc);font-weight:700;white-space:nowrap}
@@ -43,15 +43,15 @@ input:focus{outline:none;background:#fff;border-color:var(--acc);box-shadow:0 0 
 
 .actions{display:flex;flex-wrap:wrap;gap:12px;margin:24px 0 0}
 
-button{position:relative;overflow:hidden;border:0;border-radius:8px;padding:13px 22px;font:bold 16px Arial,sans-serif;cursor:pointer;background:var(--acc);color:#fff;box-shadow:0 6px 16px -6px #55555599;transition:transform .2s var(--ease),box-shadow .25s,background .2s}
+button{position:relative;overflow:hidden;border:0;border-radius:8px;padding:13px 22px;font:bold 16px Arial,sans-serif;cursor:pointer;background:var(--acc);color:#fff;box-shadow:0 6px 16px -6px #1e5fb499;transition:transform .2s var(--ease),box-shadow .25s,background .2s}
 button::after{content:"";position:absolute;top:0;left:-80%;width:50%;height:100%;background:linear-gradient(100deg,transparent,#ffffff40,transparent);transform:skewX(-20deg);transition:left .6s var(--ease)}
-button:hover{background:var(--acc-dark);transform:translateY(-2px);box-shadow:0 10px 20px -8px #555555b3}
+button:hover{background:var(--acc-dark);transform:translateY(-2px);box-shadow:0 10px 20px -8px #1e5fb4b3}
 button:hover::after{left:130%}
 button:active{transform:translateY(0) scale(.98)}
-button:focus-visible{outline:3px solid #5555554d;outline-offset:3px}
-button.secondary{background:#888;box-shadow:0 6px 16px -8px #0006}
-button.secondary:hover{background:#6a6a6a}
-button.done{background:#2b2b2b !important}
+button:focus-visible{outline:3px solid #1e5fb44d;outline-offset:3px}
+button.secondary{background:#6c9bd4;box-shadow:0 6px 16px -8px #12263f66}
+button.secondary:hover{background:#4f82bd}
+button.done{background:#0f3a73 !important}
 
 /* prévia */
 .preview-head{display:flex;align-items:center;gap:10px;margin-bottom:14px;font-weight:700;color:var(--gray);font-size:15px}
@@ -59,9 +59,9 @@ button.done{background:#2b2b2b !important}
 .live-dot::after{content:"";position:absolute;inset:0;border-radius:50%;background:var(--acc);animation:ping 2s ease-out infinite}
 @keyframes ping{from{transform:scale(1);opacity:.6}to{transform:scale(3.2);opacity:0}}
 
-.preview{overflow:hidden;background:#fff;border:1px solid var(--line);border-radius:10px;padding:10px;box-shadow:inset 0 0 0 1px #fff,0 8px 24px -16px #1f212440}
+.preview{overflow:hidden;background:#fff;border:1px solid var(--line);border-radius:10px;padding:10px;box-shadow:inset 0 0 0 1px #fff,0 8px 24px -16px #12263f40}
 .preview.tick{animation:tick .45s var(--ease)}
-@keyframes tick{0%{box-shadow:0 0 0 0 #55555540}100%{box-shadow:0 0 0 14px #55555500}}
+@keyframes tick{0%{box-shadow:0 0 0 0 #1e5fb440}100%{box-shadow:0 0 0 14px #1e5fb400}}
 
 canvas{width:100%;max-width:960px;height:auto;display:block;margin:0 auto}
 
@@ -105,7 +105,7 @@ footer{position:relative;z-index:1;text-align:center;padding:22px 12px 30px;font
 <div class="toast" id="toast" role="status" aria-live="polite">Assinatura baixada com sucesso</div>
 <script>
 const c=document.getElementById('arte'),ctx=c.getContext('2d');
-const acc='#555',gray='#4a4a4a',dark='#242424',PREFIX='(00) 0000-',DOMAIN='@teste.com.br';
+const acc='#1e5fb4',gray='#2c4a6e',dark='#12263f',PREFIX='(00) 0000-',DOMAIN='@teste.com.br';
 const IDS=['nome','cargo','setor','telPrefixo','telefone','celular','email'];
 const $=id=>document.getElementById(id);
 const PREP=new Set(['de','da','do','em','na','no','ao']);
@@ -164,7 +164,7 @@ function draw(){
     if(it.k==='p'){phoneIcon(1295,y0-46);ctx.font='bold 42px Arial,sans-serif';ctx.fillText(it.t,1360,y0,600)}
     else{emailIcon(1295,y0-29);ctx.font='bold 38px Arial,sans-serif';ctx.fillText(it.t,1360,y0,620)}});
   brand(95,555);
-  ctx.strokeStyle='#999';ctx.lineWidth=8;ctx.lineCap='round';ctx.beginPath();ctx.moveTo(660,610);ctx.lineTo(690,640);ctx.lineTo(660,670);ctx.stroke();
+  ctx.strokeStyle='#8fb0d9';ctx.lineWidth=8;ctx.lineCap='round';ctx.beginPath();ctx.moveTo(660,610);ctx.lineTo(690,640);ctx.lineTo(660,670);ctx.stroke();
   globe(890,641);ctx.fillStyle=gray;ctx.font='bold 42px Arial,sans-serif';ctx.fillText('www.exemplo.com.br',950,657,440);
   insta(1570,641);ctx.fillStyle=gray;ctx.fillText('@exemplo',1625,657,300);
   pin(140,800);ctx.fillStyle=gray;ctx.font='bold 47px Arial,sans-serif';
