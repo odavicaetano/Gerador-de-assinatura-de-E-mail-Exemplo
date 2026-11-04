@@ -39,7 +39,7 @@ input:focus{outline:none;background:#fff;border-color:var(--acc);box-shadow:0 0 
 .group input{width:auto;min-width:0;padding:0;border:0;border-radius:0;background:transparent;box-shadow:none}
 .group input:focus,.group input:hover{background:transparent;box-shadow:none;border:0}
 .group .suffix,.group .pref{flex:none;color:var(--acc);font-weight:700;white-space:nowrap}
-.group .pref{margin-right:2px}
+.group .pref{margin-right:-2px}
 
 .actions{display:flex;flex-wrap:wrap;gap:12px;margin:24px 0 0}
 
@@ -171,23 +171,30 @@ function draw(){
   ctx.fillText('Rua Exemplo, 123 - Andar 1',198,802,1740);
   ctx.fillText('Bairro - Cidade, UF - CEP 00000-000',198,860,1740);
 }
-// ajuste de largura dos campos
-function fit(el,min){el.style.width=Math.max(min,(el.value||el.placeholder||'').length+1)+'ch'}
+// ajuste de largura dos campos: mede o texto real em pixels (sem sobra)
+const measureCtx=document.createElement('canvas').getContext('2d');
+function fit(el){
+  const s=getComputedStyle(el);
+  measureCtx.font=s.fontStyle+' '+s.fontWeight+' '+s.fontSize+' '+s.fontFamily;
+  const t=el.value||el.placeholder||'';
+  const extra=el.id==='telPrefixo'?0:3;
+  el.style.width=(Math.ceil(measureCtx.measureText(t).width)+extra)+'px';
+}
 $('email').addEventListener('input',()=>{
   const el=$('email'),nv=el.value.toLowerCase().replace(/\s/g,'').split('@')[0];
-  if(nv!==el.value)el.value=nv;fit(el,8);
+  if(nv!==el.value)el.value=nv;fit(el);
 });
 $('emailGroup').addEventListener('mousedown',e=>{if(e.target!==$('email')){e.preventDefault();$('email').focus()}});
 $('telPrefixo').addEventListener('input',()=>{
-  const el=$('telPrefixo'),nv=onlyPhone(el.value);if(nv!==el.value)el.value=nv;fit(el,4);
+  const el=$('telPrefixo'),nv=onlyPhone(el.value);if(nv!==el.value)el.value=nv;fit(el);
 });
 $('telefone').addEventListener('input',()=>{const el=$('telefone');el.value=el.value.replace(/\D/g,'').slice(0,4)});
 $('celular').addEventListener('input',()=>{const el=$('celular');const nv=onlyPhone(el.value);if(nv!==el.value)el.value=nv});
 ['cargo','setor'].forEach(id=>$(id).addEventListener('input',()=>{const el=$(id),nv=titleCase(el.value);if(nv!==el.value)el.value=nv}));
 IDS.forEach(id=>$(id).addEventListener('input',draw));
-$('limpar').onclick=()=>{IDS.forEach(id=>{$(id).value=id==='telPrefixo'?PREFIX:''});fit($('email'),8);fit($('telPrefixo'),4);draw();$('nome').focus()};
+$('limpar').onclick=()=>{IDS.forEach(id=>{$(id).value=id==='telPrefixo'?PREFIX:''});fit($('email'));fit($('telPrefixo'));draw();$('nome').focus()};
 $('exportar').onclick=()=>{draw();const a=document.createElement('a');a.download='assinatura-email.jpg';a.href=c.toDataURL('image/jpeg',0.95);a.click()};
-fit($('email'),8);fit($('telPrefixo'),4);draw();
+fit($('email'));fit($('telPrefixo'));draw();
 </script>
 <script>
 (function(){
