@@ -1,0 +1,208 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Gerador de assinatura de E-mail</title>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ccircle cx='32' cy='32' r='32' fill='%23555'/%3E%3Cg transform='translate(32 32) rotate(45)' fill='%23fff'%3E%3Crect x='-4' y='-8' width='8' height='32' rx='3.5'/%3E%3Ccircle cy='-13' r='12'/%3E%3Ccircle cy='25' r='6.5'/%3E%3Crect x='-5' y='-29' width='10' height='14' fill='%23555'/%3E%3Ccircle cy='25' r='2.4' fill='%23555'/%3E%3C/g%3E%3C/svg%3E">
+<style>
+:root{--acc:#555;--acc-dark:#333;--gray:#4a4a4a;--ink:#1f2124;--muted:#6b7075;--line:#e3e6e9;--page:#eef0f2;--ease:cubic-bezier(.22,.8,.24,1)}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--page);color:var(--ink);font-family:Arial,sans-serif;min-height:100vh;position:relative;overflow-x:hidden}
+.wrap{position:relative;z-index:1;max-width:1100px;margin:0 auto;padding:40px 24px 16px}
+
+/* cabeçalho */
+.hero{margin-bottom:26px;padding-left:20px;position:relative}
+.hero::before{content:"";position:absolute;left:0;top:4px;bottom:4px;width:6px;border-radius:3px;background:var(--acc);transform-origin:top;animation:grow .8s var(--ease) both}
+.hero h1{margin:0 0 8px;font-size:clamp(28px,4.4vw,42px);line-height:1.1;letter-spacing:-.01em;font-weight:600}
+.hero h1 span{color:var(--acc);font-weight:700}
+.hero p{margin:0;max-width:62ch;color:var(--muted);font-size:17px;line-height:1.5}
+@keyframes grow{from{transform:scaleY(0)}to{transform:scaleY(1)}}
+
+.panel{background:#fff;border:1px solid var(--line);border-radius:14px;padding:26px;box-shadow:0 1px 2px #1f21240a,0 12px 32px -12px #1f212426;margin-bottom:22px;transition:box-shadow .35s var(--ease),transform .35s var(--ease)}
+.panel:hover{box-shadow:0 1px 2px #1f21240a,0 18px 40px -14px #1f212433}
+
+.fields{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px}
+label{display:block;font-size:14px;font-weight:700;margin-bottom:6px;color:var(--gray);transition:color .2s}
+.fields>div:focus-within label{color:var(--acc)}
+
+input{width:100%;padding:12px 14px;border:1.5px solid #d3d7db;border-radius:8px;background:#fafbfb;color:var(--ink);font:16px Arial,sans-serif;transition:border-color .2s,box-shadow .25s,background .2s}
+input::placeholder{color:#a2a7ac}
+input:hover{border-color:#b8bdc2}
+input:focus{outline:none;background:#fff;border-color:var(--acc);box-shadow:0 0 0 4px #55555526}
+
+/* campos com parte fixa */
+.group{display:flex;align-items:center;width:100%;padding:12px 14px;border:1.5px solid #d3d7db;border-radius:8px;background:#fafbfb;cursor:text;font:16px Arial,sans-serif;transition:border-color .2s,box-shadow .25s,background .2s;position:relative;overflow:hidden}
+.group:hover{border-color:#b8bdc2}
+.group:focus-within{background:#fff;border-color:var(--acc);box-shadow:0 0 0 4px #55555526}
+.group input{width:auto;min-width:0;padding:0;border:0;border-radius:0;background:transparent;box-shadow:none}
+.group input:focus,.group input:hover{background:transparent;box-shadow:none;border:0}
+.group .suffix,.group .pref{flex:none;color:var(--acc);font-weight:700;white-space:nowrap}
+.group .pref{margin-right:2px}
+
+.actions{display:flex;flex-wrap:wrap;gap:12px;margin:24px 0 0}
+
+button{position:relative;overflow:hidden;border:0;border-radius:8px;padding:13px 22px;font:bold 16px Arial,sans-serif;cursor:pointer;background:var(--acc);color:#fff;box-shadow:0 6px 16px -6px #55555599;transition:transform .2s var(--ease),box-shadow .25s,background .2s}
+button::after{content:"";position:absolute;top:0;left:-80%;width:50%;height:100%;background:linear-gradient(100deg,transparent,#ffffff40,transparent);transform:skewX(-20deg);transition:left .6s var(--ease)}
+button:hover{background:var(--acc-dark);transform:translateY(-2px);box-shadow:0 10px 20px -8px #555555b3}
+button:hover::after{left:130%}
+button:active{transform:translateY(0) scale(.98)}
+button:focus-visible{outline:3px solid #5555554d;outline-offset:3px}
+button.secondary{background:#888;box-shadow:0 6px 16px -8px #0006}
+button.secondary:hover{background:#6a6a6a}
+button.done{background:#2b2b2b !important}
+
+/* prévia */
+.preview-head{display:flex;align-items:center;gap:10px;margin-bottom:14px;font-weight:700;color:var(--gray);font-size:15px}
+.live-dot{width:9px;height:9px;border-radius:50%;background:var(--acc);position:relative}
+.live-dot::after{content:"";position:absolute;inset:0;border-radius:50%;background:var(--acc);animation:ping 2s ease-out infinite}
+@keyframes ping{from{transform:scale(1);opacity:.6}to{transform:scale(3.2);opacity:0}}
+
+.preview{overflow:hidden;background:#fff;border:1px solid var(--line);border-radius:10px;padding:10px;box-shadow:inset 0 0 0 1px #fff,0 8px 24px -16px #1f212440}
+.preview.tick{animation:tick .45s var(--ease)}
+@keyframes tick{0%{box-shadow:0 0 0 0 #55555540}100%{box-shadow:0 0 0 14px #55555500}}
+
+canvas{width:100%;max-width:960px;height:auto;display:block;margin:0 auto}
+
+footer{position:relative;z-index:1;text-align:center;padding:22px 12px 30px;font:13px Arial,sans-serif;color:var(--muted)}
+
+/* aviso de exportação */
+.toast{position:fixed;left:50%;bottom:28px;z-index:10;transform:translate(-50%,24px);opacity:0;pointer-events:none;background:var(--ink);color:#fff;padding:12px 20px;border-radius:999px;font:bold 15px Arial,sans-serif;box-shadow:0 12px 30px -10px #0008;transition:opacity .3s,transform .4s var(--ease)}
+.toast.show{opacity:1;transform:translate(-50%,0)}
+
+/* entrada: uma única sequência ao carregar */
+.rise{opacity:0;transform:translateY(18px);animation:rise .7s var(--ease) forwards;animation-delay:calc(var(--d,0)*90ms + 100ms)}
+@keyframes rise{to{opacity:1;transform:none}}
+
+@media(max-width:650px){.fields{grid-template-columns:1fr}.wrap{padding:22px 12px 8px}.panel{padding:18px}.hero{padding-left:16px}.preview{padding:4px}}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms !important;animation-iteration-count:1 !important;transition-duration:.01ms !important}.rise{opacity:1;transform:none}}
+</style>
+</head>
+<body>
+<main class="wrap">
+<header class="hero rise" style="--d:0">
+<h1>Gerador de assinatura de E-mail <span>Exemplo</span></h1>
+<p>Preencha os campos abaixo, confira a prévia e exporte sua assinatura institucional.</p>
+</header>
+<section class="panel rise" style="--d:1">
+<div class="fields">
+<div class="rise" style="--d:2"><label for="nome">Nome (preferencialmente nome e sobrenome)</label><input id="nome" placeholder="Insira seu nome"></div>
+<div class="rise" style="--d:3"><label for="cargo">Função</label><input id="cargo" placeholder="Insira sua função"></div>
+<div class="rise" style="--d:4"><label for="setor">Setor</label><input id="setor" placeholder="Insira seu setor"></div>
+<div class="rise" style="--d:5"><label for="telefone">Telefone</label><div class="group" id="telGroup"><input id="telPrefixo" class="pref" value="(00) 0000-" aria-label="Prefixo do telefone" inputmode="tel" autocomplete="off" maxlength="20" style="width:10ch"><input id="telefone" placeholder="XXXX" maxlength="4" inputmode="numeric" autocomplete="off" style="width:6ch"></div></div>
+<div class="rise" style="--d:6"><label for="celular">Celular ou outro telefone (opcional)</label><input id="celular" placeholder="(00) 90000-0000" inputmode="tel" autocomplete="off"></div>
+<div class="rise" style="--d:7"><label for="email">E-mail</label><div class="group" id="emailGroup"><input id="email" placeholder="nome.sobrenome" autocomplete="off" autocapitalize="off" spellcheck="false"><span class="suffix">@teste.com.br</span></div></div>
+</div>
+<div class="actions rise" style="--d:8"><button id="exportar">Baixar assinatura</button><button class="secondary" id="limpar">Limpar</button></div>
+</section>
+<section class="panel rise" style="--d:9">
+<div class="preview-head"><span class="live-dot" aria-hidden="true"></span>Prévia ao vivo</div>
+<div class="preview"><canvas id="arte" width="2048" height="962" aria-label="Prévia da assinatura de e-mail"></canvas></div>
+</section>
+</main>
+<footer>Ferramenta de exemplo · Gerador de assinatura de E-mail</footer>
+<div class="toast" id="toast" role="status" aria-live="polite">Assinatura baixada com sucesso</div>
+<script>
+const c=document.getElementById('arte'),ctx=c.getContext('2d');
+const acc='#555',gray='#4a4a4a',dark='#242424',PREFIX='(00) 0000-',DOMAIN='@teste.com.br';
+const IDS=['nome','cargo','setor','telPrefixo','telefone','celular','email'];
+const $=id=>document.getElementById(id);
+const PREP=new Set(['de','da','do','em','na','no','ao']);
+function titleCase(v){let i=0;return v.replace(/\p{L}[\p{L}\p{M}']*/gu,w=>{const l=w.toLocaleLowerCase('pt-BR');if(i++>0&&PREP.has(l))return l;return l.charAt(0).toLocaleUpperCase('pt-BR')+l.slice(1)})}
+function onlyPhone(v){return v.replace(/[^0-9+()\-\s]/g,'')}
+function formatPhone(raw){
+  const clean=onlyPhone(raw).replace(/\s+/g,' ').trim(),d=clean.replace(/\D/g,'');
+  if(!d)return '';if(/^\+/.test(clean)||d.length>11)return clean;
+  if(d.length<=2)return '('+d;
+  const r=d.slice(2),n=d.length===11?r.slice(0,5)+'-'+r.slice(5):(r.length>4?r.slice(0,4)+'-'+r.slice(4):r);
+  return '('+d.slice(0,2)+') '+n;
+}
+function phoneIcon(x,y){ctx.save();const k=2.55;ctx.translate(x+24-12*k,y+31-12*k);ctx.scale(k,k);ctx.fillStyle=acc;ctx.fill(new Path2D('M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z'));ctx.restore()}
+function emailIcon(x,y){ctx.save();ctx.strokeStyle=acc;ctx.lineWidth=5;ctx.lineJoin='round';ctx.beginPath();ctx.roundRect(x,y,48,34,5);ctx.stroke();ctx.beginPath();ctx.moveTo(x+3,y+4);ctx.lineTo(x+24,y+21);ctx.lineTo(x+45,y+4);ctx.stroke();ctx.restore()}
+function globe(x,y){ctx.save();ctx.strokeStyle=acc;ctx.lineWidth=5;ctx.beginPath();ctx.arc(x,y,31,0,Math.PI*2);ctx.stroke();ctx.beginPath();ctx.ellipse(x,y,14,31,0,0,Math.PI*2);ctx.stroke();ctx.beginPath();ctx.moveTo(x-28,y-12);ctx.quadraticCurveTo(x,y-22,x+28,y-12);ctx.moveTo(x-31,y);ctx.lineTo(x+31,y);ctx.moveTo(x-28,y+12);ctx.quadraticCurveTo(x,y+22,x+28,y+12);ctx.stroke();ctx.restore()}
+function insta(x,y){ctx.save();ctx.fillStyle=acc;ctx.beginPath();ctx.arc(x,y,34,0,Math.PI*2);ctx.fill();ctx.strokeStyle='white';ctx.lineWidth=4;ctx.beginPath();ctx.roundRect(x-18,y-18,36,36,10);ctx.stroke();ctx.beginPath();ctx.arc(x,y,9,0,Math.PI*2);ctx.stroke();ctx.beginPath();ctx.arc(x+11,y-10,2,0,Math.PI*2);ctx.fillStyle='white';ctx.fill();ctx.restore()}
+function pin(x,y){ctx.save();ctx.fillStyle=acc;ctx.beginPath();ctx.moveTo(x,y+35);ctx.bezierCurveTo(x-8,y+20,x-26,y+1,x-26,y-12);ctx.arc(x,y-12,26,Math.PI,0);ctx.bezierCurveTo(x+26,y+1,x+8,y+20,x,y+35);ctx.fill();ctx.fillStyle='white';ctx.beginPath();ctx.arc(x,y-13,8,0,Math.PI*2);ctx.fill();ctx.restore()}
+// marca genérica
+function brand(x,y){
+  ctx.save();
+  ctx.fillStyle=acc;ctx.beginPath();ctx.roundRect(x,y,175,175,32);ctx.fill();
+  // chave inglesa
+  ctx.save();ctx.translate(x+87,y+87);ctx.rotate(Math.PI/4);
+  ctx.fillStyle='#fff';
+  ctx.beginPath();ctx.roundRect(-10,-20,20,86,8);ctx.fill();
+  ctx.beginPath();ctx.arc(0,-34,30,0,Math.PI*2);ctx.fill();
+  ctx.beginPath();ctx.arc(0,66,15,0,Math.PI*2);ctx.fill();
+  ctx.fillStyle=acc;
+  ctx.fillRect(-12,-72,24,36);
+  ctx.beginPath();ctx.arc(0,66,6,0,Math.PI*2);ctx.fill();
+  ctx.restore();
+  ctx.fillStyle=gray;ctx.textBaseline='alphabetic';
+  ctx.font='bold 50px Arial,sans-serif';ctx.fillText('Ferramenta',x+205,y+80,330);
+  ctx.font='bold 32px Arial,sans-serif';ctx.fillText('Assinatura de E-mail',x+205,y+125,330);
+  ctx.restore();
+}
+function draw(){
+  ctx.clearRect(0,0,c.width,c.height);ctx.fillStyle='#fff';ctx.fillRect(0,0,c.width,c.height);
+  const nome=$('nome').value.trim(),oy=nome?0:-106;
+  const cargo=titleCase($('cargo').value.trim()),setor=titleCase($('setor').value.trim());
+  const telD=$('telefone').value.replace(/\D/g,'').slice(0,4),telP=onlyPhone($('telPrefixo').value).replace(/\s+/g,' ').trim();
+  const tel=telD?telP+(/\)$/.test(telP)?' ':'')+telD:'';
+  const cel=formatPhone($('celular').value);
+  let email=$('email').value.trim().toLowerCase().replace(/\s/g,'').split('@')[0];if(email)email+=DOMAIN;
+  ctx.textBaseline='alphabetic';ctx.fillStyle=acc;
+  const nomeUp=nome.toLocaleUpperCase('pt-BR');let ns=66;ctx.font='bold 66px Arial,sans-serif';
+  const nw=ctx.measureText(nomeUp).width;if(nw>1728){ns=66*1728/nw;ctx.font='bold '+ns+'px Arial,sans-serif'}
+  if(nome)ctx.fillText(nomeUp,160,174);
+  ctx.fillStyle=gray;ctx.font='bold 56px Arial,sans-serif';ctx.fillText(cargo,160,280+oy,1000);
+  ctx.font='52px Arial,sans-serif';ctx.fillText(setor,160,(cargo?348:280)+oy,1000);
+  const dy=26,items=[];
+  if(tel)items.push({k:'p',t:tel,gap:88});if(cel)items.push({k:'p',t:cel,gap:80});if(email)items.push({k:'e',t:email,gap:0});
+  let by=270+dy;const pos=items.map(it=>{const y0=by;by+=it.gap;return y0});
+  if(items.length){ctx.fillStyle=gray;ctx.beginPath();ctx.roundRect(1260,198+dy,8,pos[pos.length-1]+40-(198+dy),4);ctx.fill()}
+  items.forEach((it,i)=>{const y0=pos[i];ctx.fillStyle=dark;
+    if(it.k==='p'){phoneIcon(1295,y0-46);ctx.font='bold 42px Arial,sans-serif';ctx.fillText(it.t,1360,y0,600)}
+    else{emailIcon(1295,y0-29);ctx.font='bold 38px Arial,sans-serif';ctx.fillText(it.t,1360,y0,620)}});
+  brand(95,555);
+  ctx.strokeStyle='#999';ctx.lineWidth=8;ctx.lineCap='round';ctx.beginPath();ctx.moveTo(660,610);ctx.lineTo(690,640);ctx.lineTo(660,670);ctx.stroke();
+  globe(890,641);ctx.fillStyle=gray;ctx.font='bold 42px Arial,sans-serif';ctx.fillText('www.exemplo.com.br',950,657,440);
+  insta(1570,641);ctx.fillStyle=gray;ctx.fillText('@exemplo',1625,657,300);
+  pin(140,800);ctx.fillStyle=gray;ctx.font='bold 47px Arial,sans-serif';
+  ctx.fillText('Rua Exemplo, 123 - Andar 1',198,802,1740);
+  ctx.fillText('Bairro - Cidade, UF - CEP 00000-000',198,860,1740);
+}
+// ajuste de largura dos campos
+function fit(el,min){el.style.width=Math.max(min,(el.value||el.placeholder||'').length+1)+'ch'}
+$('email').addEventListener('input',()=>{
+  const el=$('email'),nv=el.value.toLowerCase().replace(/\s/g,'').split('@')[0];
+  if(nv!==el.value)el.value=nv;fit(el,8);
+});
+$('emailGroup').addEventListener('mousedown',e=>{if(e.target!==$('email')){e.preventDefault();$('email').focus()}});
+$('telPrefixo').addEventListener('input',()=>{
+  const el=$('telPrefixo'),nv=onlyPhone(el.value);if(nv!==el.value)el.value=nv;fit(el,4);
+});
+$('telefone').addEventListener('input',()=>{const el=$('telefone');el.value=el.value.replace(/\D/g,'').slice(0,4)});
+$('celular').addEventListener('input',()=>{const el=$('celular');const nv=onlyPhone(el.value);if(nv!==el.value)el.value=nv});
+['cargo','setor'].forEach(id=>$(id).addEventListener('input',()=>{const el=$(id),nv=titleCase(el.value);if(nv!==el.value)el.value=nv}));
+IDS.forEach(id=>$(id).addEventListener('input',draw));
+$('limpar').onclick=()=>{IDS.forEach(id=>{$(id).value=id==='telPrefixo'?PREFIX:''});fit($('email'),8);fit($('telPrefixo'),4);draw();$('nome').focus()};
+$('exportar').onclick=()=>{draw();const a=document.createElement('a');a.download='assinatura-email.jpg';a.href=c.toDataURL('image/jpeg',0.95);a.click()};
+fit($('email'),8);fit($('telPrefixo'),4);draw();
+</script>
+<script>
+(function(){
+  const prev=document.querySelector('.preview'),btn=document.getElementById('exportar'),toast=document.getElementById('toast');
+  const label=btn.textContent;let t1,t2;
+  function pulse(){prev.classList.remove('tick');void prev.offsetWidth;prev.classList.add('tick')}
+  ['nome','cargo','setor','telPrefixo','telefone','celular','email'].forEach(id=>document.getElementById(id).addEventListener('input',pulse));
+  document.getElementById('limpar').addEventListener('click',pulse);
+  btn.addEventListener('click',()=>{
+    pulse();btn.classList.add('done');btn.textContent='Baixada ✓';toast.classList.add('show');
+    clearTimeout(t1);clearTimeout(t2);
+    t1=setTimeout(()=>toast.classList.remove('show'),2400);
+    t2=setTimeout(()=>{btn.classList.remove('done');btn.textContent=label},2400);
+  });
+})();
+</script>
+</body>
+</html>
