@@ -40,6 +40,7 @@ input:focus{outline:none;background:#fff;border-color:var(--acc);box-shadow:0 0 
 .group input:focus,.group input:hover{background:transparent;box-shadow:none;border:0}
 .group .suffix,.group .pref{flex:none;color:var(--acc);font-weight:700;white-space:nowrap}
 .group .pref{margin-right:-2px}
+.group .suffix{user-select:none}
 
 .actions{display:flex;flex-wrap:wrap;gap:12px;margin:24px 0 0}
 
@@ -66,6 +67,8 @@ button.done{background:#0f3a73 !important}
 canvas{width:100%;max-width:960px;height:auto;display:block;margin:0 auto}
 
 footer{position:relative;z-index:1;text-align:center;padding:22px 12px 30px;font:13px Arial,sans-serif;color:var(--muted)}
+footer .privacy{max-width:760px;margin:0 auto 12px;font-size:12.5px;line-height:1.55}
+footer .privacy strong{font-weight:700;color:var(--gray)}
 
 /* aviso de exportação */
 .toast{position:fixed;left:50%;bottom:28px;z-index:10;transform:translate(-50%,24px);opacity:0;pointer-events:none;background:var(--ink);color:#fff;padding:12px 20px;border-radius:999px;font:bold 15px Arial,sans-serif;box-shadow:0 12px 30px -10px #0008;transition:opacity .3s,transform .4s var(--ease)}
@@ -90,7 +93,7 @@ footer{position:relative;z-index:1;text-align:center;padding:22px 12px 30px;font
 <div class="rise" style="--d:2"><label for="nome">Nome (preferencialmente nome e sobrenome)</label><input id="nome" placeholder="Insira seu nome"></div>
 <div class="rise" style="--d:3"><label for="cargo">Função</label><input id="cargo" placeholder="Insira sua função"></div>
 <div class="rise" style="--d:4"><label for="setor">Setor</label><input id="setor" placeholder="Insira seu setor"></div>
-<div class="rise" style="--d:5"><label for="telefone">Telefone</label><div class="group" id="telGroup"><input id="telPrefixo" class="pref" value="(00) 0000-" aria-label="Prefixo do telefone" inputmode="tel" autocomplete="off" maxlength="20" style="width:10ch"><input id="telefone" placeholder="XXXX" maxlength="4" inputmode="numeric" autocomplete="off" style="width:6ch"></div></div>
+<div class="rise" style="--d:5"><label for="telefone">Telefone</label><div class="group" id="telGroup"><input id="telPrefixo" class="pref" value="(00) 0000-" aria-label="Prefixo do telefone" inputmode="tel" autocomplete="off" maxlength="20" spellcheck="false" style="width:10ch"><input id="telefone" placeholder="XXXX" inputmode="numeric" autocomplete="off" style="width:6ch;min-width:6ch"></div></div>
 <div class="rise" style="--d:6"><label for="celular">Celular ou outro telefone (opcional)</label><input id="celular" placeholder="(00) 90000-0000" inputmode="tel" autocomplete="off"></div>
 <div class="rise" style="--d:7"><label for="email">E-mail</label><div class="group" id="emailGroup"><input id="email" placeholder="nome.sobrenome" autocomplete="off" autocapitalize="off" spellcheck="false"><span class="suffix">@teste.com.br</span></div></div>
 </div>
@@ -101,15 +104,29 @@ footer{position:relative;z-index:1;text-align:center;padding:22px 12px 30px;font
 <div class="preview"><canvas id="arte" width="2048" height="962" aria-label="Prévia da assinatura de e-mail"></canvas></div>
 </section>
 </main>
-<footer>Ferramenta de exemplo · Gerador de assinatura de E-mail</footer>
+<footer>
+<p class="privacy"><strong>Privacidade e proteção de dados:</strong> em conformidade com os princípios da LGPD, as informações inseridas são utilizadas exclusivamente para gerar sua assinatura de e-mail e não são armazenadas pela ferramenta. Os dados permanecem temporariamente durante o uso e são descartados ao encerrar a sessão, conforme o funcionamento da aplicação.</p>
+Ferramenta de exemplo · Gerador de assinatura de E-mail
+</footer>
 <div class="toast" id="toast" role="status" aria-live="polite">Assinatura baixada com sucesso</div>
 <script>
 const c=document.getElementById('arte'),ctx=c.getContext('2d');
 const acc='#1e5fb4',gray='#2c4a6e',dark='#12263f',PREFIX='(00) 0000-',DOMAIN='@teste.com.br';
 const IDS=['nome','cargo','setor','telPrefixo','telefone','celular','email'];
 const $=id=>document.getElementById(id);
-const PREP=new Set(['de','da','do','em','na','no','ao']);
-function titleCase(v){let i=0;return v.replace(/\p{L}[\p{L}\p{M}']*/gu,w=>{const l=w.toLocaleLowerCase('pt-BR');if(i++>0&&PREP.has(l))return l;return l.charAt(0).toLocaleUpperCase('pt-BR')+l.slice(1)})}
+// artigos, preposições e conjunções que ficam em minúsculas (exceto na primeira palavra)
+const PREP=new Set(['de','da','do','das','dos','em','na','no','nas','nos','ao','aos','à','às','a','o','as','os','e','ou','i','um','uma','uns','umas','num','numa','dum','duma','com','sem','sob','por','para','pela','pelo','pelas','pelos']);
+const ROMAN=/^(?=[ivx])x{0,3}(ix|iv|v?i{0,3})$/;
+function titleCase(v){
+  const words=v.match(/\p{L}[\p{L}\p{M}']*/gu)||[],last=words.length-1;let i=0;
+  return v.replace(/\p{L}[\p{L}\p{M}']*/gu,w=>{
+    const idx=i++,l=w.toLocaleLowerCase('pt-BR');
+    // níveis de cargo em algarismos romanos: "Analista II", "Técnico IV", "Supervisor I"
+    if(idx>0&&ROMAN.test(l)&&(l.length>1||idx===last))return l.toLocaleUpperCase('pt-BR');
+    if(idx>0&&(PREP.has(l)||l.length===1))return l;
+    return l.charAt(0).toLocaleUpperCase('pt-BR')+l.slice(1);
+  });
+}
 function onlyPhone(v){return v.replace(/[^0-9+()\-\s]/g,'')}
 function formatPhone(raw){
   const clean=onlyPhone(raw).replace(/\s+/g,' ').trim(),d=clean.replace(/\D/g,'');
@@ -146,7 +163,7 @@ function draw(){
   ctx.clearRect(0,0,c.width,c.height);ctx.fillStyle='#fff';ctx.fillRect(0,0,c.width,c.height);
   const nome=$('nome').value.trim(),oy=nome?0:-106;
   const cargo=titleCase($('cargo').value.trim()),setor=titleCase($('setor').value.trim());
-  const telD=$('telefone').value.replace(/\D/g,'').slice(0,4),telP=onlyPhone($('telPrefixo').value).replace(/\s+/g,' ').trim();
+  const telD=$('telefone').value.replace(/\D/g,''),telP=onlyPhone($('telPrefixo').value).replace(/\s+/g,' ').trim();
   const tel=telD?telP+(/\)$/.test(telP)?' ':'')+telD:'';
   const cel=formatPhone($('celular').value);
   let email=$('email').value.trim().toLowerCase().replace(/\s/g,'').split('@')[0];if(email)email+=DOMAIN;
@@ -180,21 +197,84 @@ function fit(el){
   const extra=el.id==='telPrefixo'?0:3;
   el.style.width=(Math.ceil(measureCtx.measureText(t).width)+extra)+'px';
 }
-$('email').addEventListener('input',()=>{
-  const el=$('email'),nv=el.value.toLowerCase().replace(/\s/g,'').split('@')[0];
-  if(nv!==el.value)el.value=nv;fit(el);
-});
-$('emailGroup').addEventListener('mousedown',e=>{if(e.target!==$('email')){e.preventDefault();$('email').focus()}});
-$('telPrefixo').addEventListener('input',()=>{
-  const el=$('telPrefixo'),nv=onlyPhone(el.value);if(nv!==el.value)el.value=nv;fit(el);
-});
-$('telefone').addEventListener('input',()=>{const el=$('telefone');el.value=el.value.replace(/\D/g,'').slice(0,4)});
-$('celular').addEventListener('input',()=>{const el=$('celular');const nv=onlyPhone(el.value);if(nv!==el.value)el.value=nv});
-['cargo','setor'].forEach(id=>$(id).addEventListener('input',()=>{const el=$(id),nv=titleCase(el.value);if(nv!==el.value)el.value=nv}));
+function fitAll(){fit($('email'));fit($('telPrefixo'));fit($('telefone'))}
+// normaliza o valor sem jogar o cursor para o fim ao editar no meio do texto
+function normalize(el,fn){
+  const old=el.value,pos=el.selectionStart,nv=fn(old);if(nv===old)return;
+  el.value=nv;
+  if(pos!=null&&document.activeElement===el){const np=Math.min(nv.length,fn(old.slice(0,pos)).length);el.setSelectionRange(np,np)}
+}
+const fire=el=>el.dispatchEvent(new Event('input',{bubbles:true}));
+const clipText=e=>(e.clipboardData||window.clipboardData).getData('text');
+
+// e-mail: só o usuário; o domínio é fixo
+const emailUser=v=>v.toLowerCase().replace(/\s/g,'').split('@')[0];
+(function(){
+  const el=$('email');let locked=false;
+  el.addEventListener('input',()=>{normalize(el,emailUser);fit(el)});
+  // digitar "@" encerra o usuário: bloqueia novos caracteres até apagar algo
+  el.addEventListener('keydown',e=>{
+    if(e.key==='@'){e.preventDefault();locked=true;return}
+    if(e.key==='Backspace'||e.key==='Delete'){locked=false;return}
+    if(locked&&e.key.length===1&&!e.ctrlKey&&!e.metaKey)e.preventDefault();
+  });
+  el.addEventListener('blur',()=>{locked=false});
+  // colar um e-mail completo mantém só o usuário
+  el.addEventListener('paste',e=>{e.preventDefault();el.setRangeText(emailUser(clipText(e)),el.selectionStart,el.selectionEnd,'end');fire(el)});
+  $('emailGroup').addEventListener('mousedown',e=>{if(e.target!==el){e.preventDefault();el.focus()}});
+})();
+
+// telefone: prefixo editável + número sem limite de dígitos (o campo cresce conforme digita)
+(function(){
+  const pref=$('telPrefixo'),num=$('telefone'),PREFIX_D=PREFIX.replace(/\D/g,'');
+  pref.addEventListener('input',()=>{normalize(pref,onlyPhone);fit(pref)});
+  num.addEventListener('input',()=>{normalize(num,v=>v.replace(/\D/g,''));fit(num)});
+  // número completo colado: reconhece o prefixo padrão ou troca pelo prefixo informado
+  function fromFull(text){
+    const clean=onlyPhone(text).replace(/\s+/g,' ').trim(),d=clean.replace(/\D/g,''),plus=/^\+/.test(clean);
+    if(d.length<8)return false;
+    if(!plus&&d.length>=10&&d.startsWith(PREFIX_D)){pref.value=PREFIX;num.value=d.slice(PREFIX_D.length)}
+    else{
+      let f=clean;
+      if(!plus&&(d.length===10||d.length===11))f=formatPhone(clean);
+      else if(!plus&&(d.length===8||d.length===9))f=d.slice(0,-4)+'-'+d.slice(-4);
+      let cnt=0,i=f.length;while(i>0&&cnt<4){i--;if(/\d/.test(f[i]))cnt++}
+      pref.value=f.slice(0,i);num.value=f.slice(i).replace(/\D/g,'');
+    }
+    fire(pref);fire(num);return true;
+  }
+  num.addEventListener('paste',e=>{e.preventDefault();const t=clipText(e);
+    if(!fromFull(t)){num.setRangeText(t.replace(/\D/g,''),num.selectionStart,num.selectionEnd,'end');fire(num)}});
+  pref.addEventListener('paste',e=>{e.preventDefault();const t=clipText(e);
+    if(!fromFull(t)){pref.setRangeText(onlyPhone(t),pref.selectionStart,pref.selectionEnd,'end');fire(pref)}});
+  $('telGroup').addEventListener('mousedown',e=>{if(e.target!==num&&e.target!==pref){e.preventDefault();num.focus()}});
+})();
+
+$('celular').addEventListener('input',()=>normalize($('celular'),onlyPhone));
+['cargo','setor'].forEach(id=>$(id).addEventListener('input',()=>normalize($(id),titleCase)));
 IDS.forEach(id=>$(id).addEventListener('input',draw));
-$('limpar').onclick=()=>{IDS.forEach(id=>{$(id).value=id==='telPrefixo'?PREFIX:''});fit($('email'));fit($('telPrefixo'));draw();$('nome').focus()};
-$('exportar').onclick=()=>{draw();const a=document.createElement('a');a.download='assinatura-email.jpg';a.href=c.toDataURL('image/jpeg',0.95);a.click()};
-fit($('email'));fit($('telPrefixo'));draw();
+$('limpar').onclick=()=>{IDS.forEach(id=>{$(id).value=id==='telPrefixo'?PREFIX:''});fitAll();draw();$('nome').focus()};
+
+// exportação: 1000×470 px, reduzida em etapas (metade por vez) para preservar a nitidez;
+// a prévia (canvas 2048×962) não é alterada
+const EXP_W=1000,EXP_H=470;
+function exportCanvas(){
+  let src=c,w=c.width,h=c.height;
+  while(w/2>=EXP_W){
+    const t=document.createElement('canvas');t.width=Math.round(w/2);t.height=Math.round(h/2);
+    const tx=t.getContext('2d');tx.imageSmoothingEnabled=true;tx.imageSmoothingQuality='high';
+    tx.drawImage(src,0,0,w,h,0,0,t.width,t.height);
+    src=t;w=t.width;h=t.height;
+  }
+  const out=document.createElement('canvas');out.width=EXP_W;out.height=EXP_H;
+  const ox=out.getContext('2d');ox.fillStyle='#fff';ox.fillRect(0,0,EXP_W,EXP_H);
+  ox.imageSmoothingEnabled=true;ox.imageSmoothingQuality='high';
+  ox.drawImage(src,0,0,w,h,0,0,EXP_W,EXP_H);
+  return out;
+}
+$('exportar').onclick=()=>{draw();const a=document.createElement('a');a.download='assinatura-email.jpg';a.href=exportCanvas().toDataURL('image/jpeg',0.95);a.click()};
+fitAll();draw();
+if(document.fonts&&document.fonts.ready)document.fonts.ready.then(fitAll);
 </script>
 <script>
 (function(){
