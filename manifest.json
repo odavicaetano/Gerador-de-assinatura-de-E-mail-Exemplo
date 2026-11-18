@@ -1,0 +1,26 @@
+{
+  "id": "./index.html",
+  "name": "Gerador de Assinatura de E-mail | Exemplo",
+  "short_name": "Assinatura Exemplo",
+  "description": "Gere e exporte assinaturas de e-mail com prévia ao vivo, sem armazenar dados.",
+  "lang": "pt-BR",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#e8f0f9",
+  "theme_color": "#1e5fb4",
+  "icons": [
+    {
+      "src": "./icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "./icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}
