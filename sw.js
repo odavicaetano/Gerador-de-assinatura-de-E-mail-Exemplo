@@ -1,12 +1,13 @@
 /* PWA Exemplo: somente recursos estáticos públicos, nunca dados digitados. */
-const CACHE_NAME = 'assinatura-exemplo-static-v1';
+const CACHE_NAME = 'assinatura-exemplo-static-v2';
 const APP_SHELL = [
   './',
   './index.html',
   './manifest.json',
   './icon.svg',
   './icon-192.png',
-  './icon-512.png'
+  './icon-512.png',
+  './icon-maskable-512.png'
 ];
 const CACHE_PREFIX = 'assinatura-exemplo-static-';
 
@@ -36,10 +37,13 @@ self.addEventListener('fetch', event => {
   if (request.mode === 'navigate') {
     event.respondWith((async () => {
       const cache = await caches.open(CACHE_NAME);
-      const cached = await cache.match('./index.html');
-      if (cached) return cached;
-      try { return await fetch(request); }
-      catch { return Response.error(); }
+      try {
+        const fresh = await fetch(request);
+        if (fresh.ok) await cache.put('./index.html', fresh.clone());
+        return fresh;
+      } catch {
+        return await cache.match('./index.html') || Response.error();
+      }
     })());
     return;
   }

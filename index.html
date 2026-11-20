@@ -13,7 +13,7 @@
 <link rel="apple-touch-icon" href="./icon-192.png">
 <link rel="icon" type="image/png" sizes="192x192" href="./icon-192.png">
 
-<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ccircle cx='32' cy='32' r='32' fill='%231e5fb4'/%3E%3Cg transform='translate(32 32) rotate(45)' fill='%23fff'%3E%3Crect x='-4' y='-8' width='8' height='32' rx='3.5'/%3E%3Ccircle cy='-13' r='12'/%3E%3Ccircle cy='25' r='6.5'/%3E%3Crect x='-5' y='-29' width='10' height='14' fill='%231e5fb4'/%3E%3Ccircle cy='25' r='2.4' fill='%231e5fb4'/%3E%3C/g%3E%3C/svg%3E">
+<link rel="icon" type="image/svg+xml" href="./icon.svg">
 <style>
 :root{--acc:#1e5fb4;--acc-dark:#154a91;--gray:#2c4a6e;--ink:#12263f;--muted:#5f7287;--line:#d6e2f0;--page:#e8f0f9;--ease:cubic-bezier(.22,.8,.24,1)}
 *{box-sizing:border-box}
@@ -127,6 +127,64 @@ button.tel-remove:hover{background:#fff;color:var(--acc);border-color:var(--acc)
 @keyframes phslide{0%,14%{transform:translateX(0)}50%,64%{transform:translateX(calc(var(--dist,0px)*-1))}100%{transform:translateX(0)}}
 @media(max-width:650px){.cargo-row{flex-wrap:wrap;align-items:stretch}.cargo-row .cargo-cell,.cargo-row .oab-cell{flex:1 1 100%}.cargo-row label{min-height:auto}.cel-row .dd{flex:0 0 108px;width:108px}.dd .dd-btn{padding:7px 5px;gap:5px}.dd-ico{width:21px}.dd-txt b{font-size:13px}}
 @media(prefers-reduced-motion:reduce){.ph-in.run{animation:none!important;max-width:100%;overflow:hidden;text-overflow:ellipsis}}
+
+/* Atualizações de alinhamento e campos baseadas na versão institucional,
+   adaptadas exclusivamente à identidade visual azul do modelo Exemplo. */
+.fields > div:not(.cargo-row):focus-within label,
+.cargo-row > .cell:focus-within label { color:var(--acc) }
+.cargo-row { gap:14px;align-items:flex-end }
+.cargo-row .cargo-cell { flex:3 1 0 }
+.cargo-row .oab-cell { flex:2 1 0 }
+.cargo-row .oab-cell label {font-size:12px}
+.cargo-row .oab-cell input {font-size:15px}
+.cargo-row .oab-cell input::placeholder {font-size:13px}
+.cargo-row .oab-cell .phw .ph {font-size:13px}
+
+/* Telefone: base editável, separador e quatro últimos números independentes */
+.tel-parts {display:grid;grid-template-columns:minmax(0,1.8fr) auto minmax(0,1fr);gap:10px;width:100%;align-items:center}
+.tel-part {min-width:0}
+.tel-part input {width:100%;padding:12px 10px;color:var(--acc);font-weight:700;text-align:center;font-variant-numeric:tabular-nums}
+.tel-part input::placeholder {color:#8fa4bb;font-weight:400}
+.tel-sep {color:var(--acc);font:bold 28px Arial,sans-serif;line-height:1;align-self:center;transform:translateY(1px)}
+
+/* E-mail editável com domínio fixo, largura calculada para não separar o @ */
+.email-group {display:flex;align-items:center;width:100%;padding:12px 14px;border:1.5px solid #c3d3e6;border-radius:8px;background:#f5f9fe;cursor:text;font:16px Arial,sans-serif;transition:border-color .2s,box-shadow .25s,background .2s;position:relative;overflow:hidden}
+.email-group:hover {border-color:#9bb4d2}
+.email-group:focus-within {background:#fff;border-color:var(--acc);box-shadow:0 0 0 4px #1e5fb426}
+.email-group input {width:8ch;min-width:0;flex:0 1 auto;padding:0;border:0;border-radius:0;background:transparent;box-shadow:none}
+.email-group input:focus,.email-group input:hover {background:transparent;box-shadow:none;border:0}
+.email-group .suffix {flex:none;color:var(--acc);font-weight:700;white-space:nowrap;user-select:none}
+.email-group .mirror {position:absolute;visibility:hidden;white-space:pre;pointer-events:none;font:16px Arial,sans-serif}
+
+/* Seletores de telefone seguem a composição e proporção da versão atualizada */
+.cel-row {gap:10px}
+.cel-row > .phw,.cel-row > input {flex:1 1 auto;min-width:0}
+.cel-row .dd {width:auto;flex:0 0 auto}
+.dd .dd-btn {gap:10px;min-height:46px;padding:7px 14px 7px 8px;font:16px Arial,sans-serif}
+.dd-ico {width:28px;height:28px;border-radius:7px;background:#1e5fb414}
+.dd-ico svg {width:18px;height:18px}
+.dd-txt b {font-size:15px}
+.dd-txt small {font-size:12.5px;margin-top:2px}
+.dd-chev {margin-left:4px}
+.dd-opt {gap:10px;padding:9px 12px 9px 8px;border-radius:7px}
+.dd-list {z-index:40}
+button.tel-remove {width:44px;display:grid;place-items:center}
+button.tel-remove svg {width:14px;height:14px}
+button.tel-add {padding:4px 2px}
+.phw .ph {left:15.5px;right:15.5px}
+.live-dot,.live-dot::after {transform-origin:50% 50%}
+@media(max-width:650px) {
+  .cel-row .dd {width:auto;flex:0 0 auto}
+  .dd .dd-btn {gap:6px;padding:7px 8px;font-size:14px}
+  .dd-ico {width:25px;height:25px}
+  .dd-txt b {font-size:14px}
+}
+@media(max-width:380px) {
+  .tel-parts {gap:6px}
+  .tel-part input {padding:12px 5px;font-size:14px}
+  .tel-sep {font-size:24px}
+}
+
 </style>
 </head>
 <body>
@@ -138,14 +196,19 @@ button.tel-remove:hover{background:#fff;color:var(--acc);border-color:var(--acc)
 <section class="panel rise" style="--d:1">
 <div class="fields">
 <div class="rise" style="--d:2"><label for="nome">Nome (preferencialmente nome e sobrenome)</label><input id="nome" placeholder="Insira seu nome"></div>
-<div class="rise cargo-row" style="--d:3"><div class="cargo-cell"><label for="cargo">Função</label><input id="cargo" placeholder="Insira sua função"></div><div class="oab-cell"><label for="oab">OAB/MG N° (opcional)</label><input id="oab" placeholder="Insira o número da sua OAB" inputmode="numeric" autocomplete="off"></div></div>
-<div class="rise" style="--d:4"><label for="setor">Setor</label><input id="setor" placeholder="Insira seu setor"></div>
-<div class="rise" style="--d:5"><label for="telefone">Telefone</label><div class="group" id="telGroup"><input id="telPrefixo" class="pref" value="(00) 0000-" aria-label="Prefixo do telefone" inputmode="tel" autocomplete="off" maxlength="20" spellcheck="false" style="width:10ch"><input id="telefone" placeholder="XXXX" inputmode="numeric" autocomplete="off" style="width:6ch;min-width:6ch"></div></div>
+<div class="rise cargo-row" style="--d:3"><div class="cell cargo-cell"><label for="cargo">Função</label><input id="cargo" placeholder="Insira sua função"></div><div class="cell oab-cell"><label for="oab">OAB/MG N°</label><input id="oab" placeholder="Insira o número da sua OAB" autocomplete="off" spellcheck="false"></div></div>
+<div class="rise" style="--d:4"><label for="setor">Setor</label><input id="setor" placeholder="Insira seu setor ou função"></div>
+<div class="rise" style="--d:5"><label for="telBase">Telefone</label>
+<div class="tel-parts" id="telGroup">
+  <div class="tel-part tel-base"><input id="telBase" value="(00) 0000" placeholder="(00) 0000" aria-label="DDD e quatro primeiros dígitos do telefone" inputmode="tel" autocomplete="off"></div>
+  <span class="tel-sep" aria-hidden="true">-</span>
+  <div class="tel-part tel-final"><input id="telefone" placeholder="XXXX" aria-label="Quatro últimos dígitos do telefone" inputmode="numeric" autocomplete="off" maxlength="4"></div>
+</div></div>
 <div class="rise" style="--d:6"><label for="celular">Celular ou outro telefone (opcional)</label>
-<div class="cel-row"><input id="celular" placeholder="(00) 90000-0000" inputmode="tel" autocomplete="off"><select id="celIcone" aria-label="Ícone do primeiro número"><option value="telefone">Telefone</option><option value="celular">Celular</option><option value="whatsapp">WhatsApp</option></select></div>
-<div class="cel-row cel-extra" id="celExtra" hidden><input id="celular2" placeholder="(00) 90000-0000" inputmode="tel" autocomplete="off" aria-label="Telefone adicional"><select id="celIcone2" aria-label="Ícone do telefone adicional"><option value="telefone">Telefone</option><option value="celular">Celular</option><option value="whatsapp">WhatsApp</option></select><button type="button" class="tel-remove" id="celRemover" aria-label="Remover telefone adicional">×</button></div>
+<div class="cel-row"><input id="celular" placeholder="(00) 90000-0000" inputmode="tel" autocomplete="off"><select id="celIcone" aria-label="Ícone do primeiro número na assinatura"><option value="telefone">Telefone</option><option value="celular">Celular</option><option value="whatsapp">WhatsApp</option></select></div>
+<div class="cel-row cel-extra" id="celExtra" hidden><input id="celular2" placeholder="(00) 90000-0000" inputmode="tel" autocomplete="off" aria-label="Telefone adicional"><select id="celIcone2" aria-label="Ícone do telefone adicional na assinatura"><option value="telefone">Telefone</option><option value="celular">Celular</option><option value="whatsapp">WhatsApp</option></select><button type="button" class="tel-remove" id="celRemover" title="Remover telefone adicional" aria-label="Remover telefone adicional"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M4 4l8 8M12 4l-8 8" stroke="currentColor" stroke-width="2" stroke-linecap="round" fill="none"/></svg></button></div>
 <button type="button" class="tel-add" id="celAdicionar">+ Adicionar outro telefone</button><p class="tel-aviso" id="celAviso" role="status" hidden></p></div>
-<div class="rise" style="--d:7"><label for="email">E-mail</label><div class="group" id="emailGroup"><input id="email" placeholder="nome.sobrenome" autocomplete="off" autocapitalize="off" spellcheck="false"><span class="suffix">@teste.com.br</span></div></div>
+<div class="rise" style="--d:7"><label for="email">E-mail</label><div class="email-group" id="emailGroup"><input id="email" placeholder="nome.sobrenome" autocomplete="off" autocapitalize="off" spellcheck="false"><span class="suffix">@teste.com.br</span><span class="mirror" id="emailMirror" aria-hidden="true"></span></div></div>
 <div class="rise" style="--d:7"><label for="endereco">Endereço</label><select id="endereco"><option value="principal" data-desc="Rua Exemplo, 123, Andar 1" selected>Endereço principal</option><option value="alternativo" data-desc="Av. Exemplo, 456, Andar 2">Endereço alternativo</option></select></div>
 </div>
 <div class="actions rise" style="--d:8"><button id="exportar">Baixar assinatura</button><button class="secondary" id="limpar">Limpar</button></div>
@@ -162,8 +225,8 @@ Ferramenta de exemplo · Gerador de assinatura de E-mail
 <div class="toast" id="toast" role="status" aria-live="polite">Assinatura baixada com sucesso</div>
 <script>
 const c=document.getElementById('arte'),ctx=c.getContext('2d');
-const acc='#1e5fb4',gray='#2c4a6e',dark='#12263f',PREFIX='(00) 0000-',DOMAIN='@teste.com.br';
-const IDS=['nome','cargo','oab','setor','telPrefixo','telefone','celular','celular2','email'];
+const acc='#1e5fb4',gray='#2c4a6e',dark='#12263f',BASE_DEFAULT='(00) 0000',DOMAIN='@teste.com.br';
+const IDS=['nome','cargo','oab','setor','telBase','telefone','celular','celular2','email'];
 const $=id=>document.getElementById(id);
 // artigos, preposições e conjunções que ficam em minúsculas (exceto na primeira palavra)
 const PREP=new Set(['de','da','do','das','dos','em','na','no','nas','nos','ao','aos','à','às','a','o','as','os','e','ou','i','um','uma','uns','umas','num','numa','dum','duma','com','sem','sob','por','para','pela','pelo','pelas','pelos']);
@@ -223,9 +286,10 @@ function brand(x,y){
 }
 function draw(){
  ctx.clearRect(0,0,c.width,c.height);ctx.fillStyle='#fff';ctx.fillRect(0,0,c.width,c.height);
- const nome=$('nome').value.trim(),oy=nome?0:-106,cargo=titleCase($('cargo').value.trim()),setor=titleCase($('setor').value.trim()),oab=formatOab($('oab').value);
- const telD=$('telefone').value.replace(/\D/g,''),telP=onlyPhone($('telPrefixo').value).replace(/\s+/g,' ').trim();
- const tel=telD?telP+(/\)$/.test(telP)?' ':'')+telD:'';
+ const nome=$('nome').value.trim(),oy=nome?0:-84,cargo=titleCase($('cargo').value.trim()),setor=titleCase($('setor').value.trim()),oab=formatOab($('oab').value);
+ const telD=$('telefone').value.replace(/\D/g,'').slice(0,4),telBaseDigits=$('telBase').value.replace(/\D/g,'').slice(0,6);
+ const telDDD=telBaseDigits.slice(0,2),telP=telBaseDigits.slice(2,6);
+ const tel=telD.length===4&&telDDD.length===2&&telP.length===4?`(${telDDD}) ${telP}-${telD}`:'';
  const phones=[{t:formatPhone($('celular').value),k:ICON_KIND[$('celIcone').value]||'p'}];
  if(!$('celExtra').hidden)phones.push({t:formatPhone($('celular2').value),k:ICON_KIND[$('celIcone2').value]||'p'});
  const filled=phones.filter(p=>p.t);
@@ -234,19 +298,19 @@ function draw(){
  const nomeUp=nome.toLocaleUpperCase('pt-BR');let ns=66;ctx.font='bold 66px Arial,sans-serif';
  const nw=ctx.measureText(nomeUp).width;if(nw>1728){ns=66*1728/nw;ctx.font='bold '+ns+'px Arial,sans-serif'}
  if(nome)ctx.fillText(nomeUp,160,174);
- const top=224;
- function layout(list){let by=296;return list.map(it=>{const y=by;by+=it.gap;return y})}
+ const top=192;
+ function layout(list){let by=264;return list.map(it=>{const y=by;by+=it.gap;return y})}
  function build(phs,pair){const a=[];if(tel)a.push({k:'p',t:tel,gap:88});if(pair)a.push({k:'pair',a:phs[0],b:phs[1],gap:80});else phs.forEach(p=>a.push({...p,gap:80}));if(email)a.push({k:'e',t:email,gap:0});return a}
  const base=build(filled.slice(0,1),false),basePos=layout(base);let items=base,pos=basePos;extraPhoneStatus=filled.length>1?'hidden':'none';
  if(filled.length>1){const vertical=build(filled,false),vPos=layout(vertical);
   if(vPos.length&&vPos[vPos.length-1]+40<=CONTACT_BOTTOM){items=vertical;pos=vPos;extraPhoneStatus='ok'}
   else {ctx.font='bold 42px Arial,sans-serif';const w=ctx.measureText(filled[0].t).width+65+40+65+ctx.measureText(filled[1].t).width;
-   if(1360+w<=CONTACT_RIGHT){items=build(filled,true);pos=layout(items);extraPhoneStatus='ok'}}}
- if(items.length){ctx.fillStyle=gray;ctx.beginPath();ctx.roundRect(1260,top,8,Math.max(8,pos[pos.length-1]+40-top),4);ctx.fill()}
+   if(1360-65+w<=CONTACT_RIGHT){items=build(filled,true);pos=layout(items);extraPhoneStatus='ok'}}}
+ if(items.length){ctx.fillStyle=gray;ctx.beginPath();ctx.roundRect(1260,top,8,Math.max(112,pos[pos.length-1]+36-top),4);ctx.fill()}
  const lines=[];if(cargo)lines.push({t:cargo,f:'bold 56px Arial,sans-serif'});if(oab)lines.push({t:'OAB/MG '+oab,f:'bold 56px Arial,sans-serif'});if(setor)lines.push({t:setor,f:'52px Arial,sans-serif'});
- let ly=280+oy;
- if(basePos.length&&lines.length){const barC=(top+basePos[basePos.length-1]+40)/2;const blkC=((ly-40)+(ly+68*(lines.length-1)))/2;ly+=Math.max(0,Math.round(barC-blkC))}
- ctx.fillStyle=gray;lines.forEach((l,i)=>{ctx.font=l.f;ctx.fillText(l.t,160,ly+68*i,1000)});
+ // A posição dos textos permanece fixa, independentemente de telefones adicionais.
+ const ly=285+oy;
+ ctx.fillStyle=gray;lines.forEach((l,i)=>{ctx.font=l.f;ctx.fillText(l.t,160,ly+62*i,1000)});
  items.forEach((it,i)=>{const y=pos[i];ctx.fillStyle=dark;
   if(it.k==='e'){emailIcon(1295,y-29);ctx.font='bold 38px Arial,sans-serif';ctx.fillText(it.t,1360,y,620);return}
   ctx.font='bold 42px Arial,sans-serif';
@@ -254,23 +318,13 @@ function draw(){
   contactIcon(it.k,1295,y-46);ctx.fillText(it.t,1360,y,600)
  });
  const aviso=$('celAviso');aviso.hidden=extraPhoneStatus!=='hidden';aviso.textContent=extraPhoneStatus==='hidden'?'Não há espaço suficiente na assinatura para exibir o telefone adicional sem comprometer o layout.':'';
- brand(95,570);ctx.strokeStyle='#8fb0d9';ctx.lineWidth=8;ctx.lineCap='round';ctx.beginPath();ctx.moveTo(620,625);ctx.lineTo(650,655);ctx.lineTo(620,685);ctx.stroke();
- globe(850,656);ctx.fillStyle=gray;ctx.font='bold 42px Arial,sans-serif';ctx.fillText('www.exemplo.com.br',910,672,440);
- insta(1530,656);ctx.fillStyle=gray;ctx.fillText('@exemplo',1585,672,300);
- pin(140,808);ctx.fillStyle=gray;ctx.font='bold 47px Arial,sans-serif';const end=ENDERECOS[$('endereco').value]||ENDERECOS.principal;ctx.fillText(end[0],198,810,1740);ctx.fillText(end[1],198,868,1740);
+ brand(95,505);ctx.strokeStyle='#8fb0d9';ctx.lineWidth=8;ctx.lineCap='round';ctx.beginPath();ctx.moveTo(660,560);ctx.lineTo(690,590);ctx.lineTo(660,620);ctx.stroke();
+ globe(890,591);ctx.fillStyle=gray;ctx.font='bold 42px Arial,sans-serif';ctx.fillText('www.exemplo.com.br',950,607,440);
+ insta(1570,591);ctx.fillStyle=gray;ctx.fillText('@exemplo',1625,607,300);
+ pin(140,744);ctx.fillStyle=gray;ctx.font='bold 47px Arial,sans-serif';const end=ENDERECOS[$('endereco').value]||ENDERECOS.principal;ctx.fillText(end[0],198,746,1740);ctx.fillText(end[1],198,804,1740);
 }
 
-// ajuste de largura dos campos: mede o texto real em pixels (sem sobra)
-const measureCtx=document.createElement('canvas').getContext('2d');
-function fit(el){
-  const s=getComputedStyle(el);
-  measureCtx.font=s.fontStyle+' '+s.fontWeight+' '+s.fontSize+' '+s.fontFamily;
-  const t=el.value||el.placeholder||'';
-  const extra=el.id==='telPrefixo'?0:3;
-  el.style.width=(Math.ceil(measureCtx.measureText(t).width)+extra)+'px';
-}
-function fitAll(){fit($('email'));fit($('telPrefixo'));fit($('telefone'))}
-// normaliza o valor sem jogar o cursor para o fim ao editar no meio do texto
+// Normaliza os campos mantendo a posição do cursor ao editar no meio do texto.
 function normalize(el,fn){
   const old=el.value,pos=el.selectionStart,nv=fn(old);if(nv===old)return;
   el.value=nv;
@@ -278,48 +332,56 @@ function normalize(el,fn){
 }
 const fire=el=>el.dispatchEvent(new Event('input',{bubbles:true}));
 const clipText=e=>(e.clipboardData||window.clipboardData).getData('text');
-
-// e-mail: só o usuário; o domínio é fixo
 const emailUser=v=>v.toLowerCase().replace(/\s/g,'').split('@')[0];
+let fitEmail=()=>{};
 (function(){
-  const el=$('email');let locked=false;
-  el.addEventListener('input',()=>{normalize(el,emailUser);fit(el)});
-  // digitar "@" encerra o usuário: bloqueia novos caracteres até apagar algo
+  const el=$('email'),mir=$('emailMirror');let locked=false;
+  fitEmail=()=>{mir.textContent=el.value||el.placeholder;el.style.width=(Math.ceil(mir.getBoundingClientRect().width)+4)+'px'};
+  el.addEventListener('input',()=>{normalize(el,emailUser);fitEmail()});
   el.addEventListener('keydown',e=>{
     if(e.key==='@'){e.preventDefault();locked=true;return}
     if(e.key==='Backspace'||e.key==='Delete'){locked=false;return}
     if(locked&&e.key.length===1&&!e.ctrlKey&&!e.metaKey)e.preventDefault();
   });
   el.addEventListener('blur',()=>{locked=false});
-  // colar um e-mail completo mantém só o usuário
   el.addEventListener('paste',e=>{e.preventDefault();el.setRangeText(emailUser(clipText(e)),el.selectionStart,el.selectionEnd,'end');fire(el)});
   $('emailGroup').addEventListener('mousedown',e=>{if(e.target!==el){e.preventDefault();el.focus()}});
+  if(document.fonts&&document.fonts.ready)document.fonts.ready.then(fitEmail);
+  fitEmail();
 })();
 
-// telefone: prefixo editável + número sem limite de dígitos (o campo cresce conforme digita)
+// DDD + prefixo em um campo e quatro dígitos finais no outro, com traço visível.
 (function(){
-  const pref=$('telPrefixo'),num=$('telefone'),PREFIX_D=PREFIX.replace(/\D/g,'');
-  pref.addEventListener('input',()=>{normalize(pref,onlyPhone);fit(pref)});
-  num.addEventListener('input',()=>{normalize(num,v=>v.replace(/\D/g,''));fit(num)});
-  // número completo colado: reconhece o prefixo padrão ou troca pelo prefixo informado
-  function fromFull(text){
-    const clean=onlyPhone(text).replace(/\s+/g,' ').trim(),d=clean.replace(/\D/g,''),plus=/^\+/.test(clean);
-    if(d.length<8)return false;
-    if(!plus&&d.length>=10&&d.startsWith(PREFIX_D)){pref.value=PREFIX;num.value=d.slice(PREFIX_D.length)}
-    else{
-      let f=clean;
-      if(!plus&&(d.length===10||d.length===11))f=formatPhone(clean);
-      else if(!plus&&(d.length===8||d.length===9))f=d.slice(0,-4)+'-'+d.slice(-4);
-      let cnt=0,i=f.length;while(i>0&&cnt<4){i--;if(/\d/.test(f[i]))cnt++}
-      pref.value=f.slice(0,i);num.value=f.slice(i).replace(/\D/g,'');
-    }
-    fire(pref);fire(num);return true;
+  const base=$('telBase'),num=$('telefone'),clean=v=>String(v||'').replace(/\D/g,'');
+  function formatBase(v){
+    const d=clean(v).slice(0,6);if(!d)return '';
+    const area=d.slice(0,2),prefix=d.slice(2,6);
+    return '('+area+(area.length===2?')':'')+(prefix?' '+prefix:'');
   }
-  num.addEventListener('paste',e=>{e.preventDefault();const t=clipText(e);
-    if(!fromFull(t)){num.setRangeText(t.replace(/\D/g,''),num.selectionStart,num.selectionEnd,'end');fire(num)}});
-  pref.addEventListener('paste',e=>{e.preventDefault();const t=clipText(e);
-    if(!fromFull(t)){pref.setRangeText(onlyPhone(t),pref.selectionStart,pref.selectionEnd,'end');fire(pref)}});
-  $('telGroup').addEventListener('mousedown',e=>{if(e.target!==num&&e.target!==pref){e.preventDefault();num.focus()}});
+  function fromFull(text){
+    let digits=clean(text);
+    if(digits.length===12&&digits.startsWith('55'))digits=digits.slice(2);
+    if(digits.length!==10)return false;
+    base.value=formatBase(digits.slice(0,6));num.value=digits.slice(6,10);
+    fire(base);fire(num);return true;
+  }
+  base.addEventListener('input',()=>{
+    const formatted=formatBase(base.value);
+    if(formatted!==base.value)normalize(base,formatBase);
+    if(clean(base.value).length===6&&document.activeElement===base)num.focus();
+  });
+  base.addEventListener('paste',e=>{
+    e.preventDefault();const t=clipText(e);
+    if(fromFull(t)){num.focus();return}
+    base.value=formatBase(t);fire(base);
+  });
+  num.addEventListener('input',()=>normalize(num,v=>clean(v).slice(0,4)));
+  num.addEventListener('paste',e=>{
+    e.preventDefault();const t=clipText(e);
+    if(fromFull(t)){num.focus();return}
+    num.value=clean(t).slice(0,4);fire(num);
+  });
+  num.addEventListener('keydown',e=>{if(e.key==='Backspace'&&!num.value)base.focus()});
 })();
 
 ['celular','celular2'].forEach(id=>$(id).addEventListener('input',()=>normalize($(id),onlyPhone)));
@@ -330,7 +392,7 @@ IDS.forEach(id=>$(id).addEventListener('input',draw));
 function setExtra(on){$('celExtra').hidden=!on;$('celAdicionar').hidden=on;if(!on){$('celular2').value='';$('celIcone2').selectedIndex=0;$('celIcone2').dispatchEvent(new Event('change',{bubbles:true}))}draw()}
 $('celAdicionar').addEventListener('click',()=>{setExtra(true);$('celular2').focus()});
 $('celRemover').addEventListener('click',()=>{setExtra(false);$('celAdicionar').focus()});
-$('limpar').onclick=()=>{IDS.forEach(id=>{$(id).value=id==='telPrefixo'?PREFIX:''});$('endereco').selectedIndex=0;$('celIcone').selectedIndex=0;$('celIcone2').selectedIndex=0;['endereco','celIcone','celIcone2'].forEach(id=>$(id).dispatchEvent(new Event('change',{bubbles:true})));setExtra(false);fitAll();draw();$('nome').focus()};
+$('limpar').onclick=()=>{IDS.forEach(id=>{$(id).value=id==='telBase'?BASE_DEFAULT:''});$('endereco').selectedIndex=0;$('celIcone').selectedIndex=0;$('celIcone2').selectedIndex=0;['endereco','celIcone','celIcone2'].forEach(id=>$(id).dispatchEvent(new Event('change',{bubbles:true})));setExtra(false);fitEmail();draw();$('nome').focus()};
 
 // exportação: 1000×470 px, reduzida em etapas (metade por vez) para preservar a nitidez;
 // a prévia (canvas 2048×962) não é alterada
@@ -350,15 +412,15 @@ function exportCanvas(){
   return out;
 }
 $('exportar').onclick=()=>{draw();const a=document.createElement('a');a.download='assinatura-email.jpg';a.href=exportCanvas().toDataURL('image/jpeg',0.95);a.click()};
-fitAll();draw();
-if(document.fonts&&document.fonts.ready)document.fonts.ready.then(fitAll);
+fitEmail();draw();
+if(document.fonts&&document.fonts.ready)document.fonts.ready.then(fitEmail);
 </script>
 <script>
 (function(){
   const prev=document.querySelector('.preview'),btn=document.getElementById('exportar'),toast=document.getElementById('toast');
   const label=btn.textContent;let t1,t2;
   function pulse(){prev.classList.remove('tick');void prev.offsetWidth;prev.classList.add('tick')}
-  ['nome','cargo','oab','setor','telPrefixo','telefone','celular','celular2','email'].forEach(id=>document.getElementById(id).addEventListener('input',pulse));
+  ['nome','cargo','oab','setor','telBase','telefone','celular','celular2','email'].forEach(id=>document.getElementById(id).addEventListener('input',pulse));
   ['endereco','celIcone','celIcone2'].forEach(id=>document.getElementById(id).addEventListener('change',pulse));
   ['celAdicionar','celRemover'].forEach(id=>document.getElementById(id).addEventListener('click',pulse));
   document.getElementById('limpar').addEventListener('click',pulse);
